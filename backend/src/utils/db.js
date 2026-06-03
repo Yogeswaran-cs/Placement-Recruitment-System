@@ -14,7 +14,7 @@ const connectDB = async () => {
     try {
       const mongoServer = await MongoMemoryServer.create({
         binary: {
-          version: '4.0.25'
+          version: '6.0.14'
         }
       });
       const mongoUri = mongoServer.getUri();
