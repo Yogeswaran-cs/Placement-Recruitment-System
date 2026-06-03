@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { MongoMemoryServer } = require('mongodb-memory-server');
 
 const connectDB = async () => {
   try {
@@ -10,8 +9,16 @@ const connectDB = async () => {
     console.log(`MongoDB Connected (Atlas): ${conn.connection.host}`);
   } catch (error) {
     console.warn(`Atlas Database connection failed: ${error.message}`);
+    
+    // In production, do not fall back to in-memory server
+    if (process.env.NODE_ENV === 'production') {
+      console.error('Production database connection failed. Exiting...');
+      process.exit(1);
+    }
+    
     console.log('Starting local In-Memory MongoDB Server...');
     try {
+      const { MongoMemoryServer } = require('mongodb-memory-server');
       const mongoServer = await MongoMemoryServer.create({
         binary: {
           version: '6.0.14'
